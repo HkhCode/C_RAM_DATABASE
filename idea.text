@@ -1,0 +1,10 @@
+user struct 
+
+dynamic arr
+
+linked list node 
+
+
+
+dynamic arr -> array : each item is a linked list node -> each linked list node
+    contains a user and pointer to next
