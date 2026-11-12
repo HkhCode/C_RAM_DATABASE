@@ -1,0 +1,26 @@
+#ifndef DYNAMIC_ARRAY_H
+#define DYNAMIC_ARRAY_H
+#include "user.h"
+
+#define ADD_ON_REALOC 5
+
+typedef struct {
+    int size;
+    int free;
+    int alocated;
+    user *users;
+} dynamic_array;
+
+dynamic_array *init_dynamic_array(int size, user *items, int items_count);
+
+void *insert_item(user *user, dynamic_array *target_array, int items_count);
+
+dynamic_array *delete_item(int userid, dynamic_array *target_array);
+
+dynamic_array *update_item(int userid, user *new_user, dynamic_array *target_array);
+
+void print_dynamic_array_items(dynamic_array *target_array);
+
+void remove_dynamic_array(dynamic_array *target_array);
+
+#endif
