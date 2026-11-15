@@ -24,7 +24,7 @@ typedef struct {
 
 dynamic_array *init_dynamic_array(int size, user *items, int items_count);
 
-void *insert_item(user *user, dynamic_array *target_array, int items_count);
+void *insert_item(user *user, dynamic_array *target_array);
 
 dynamic_array *delete_item(int userid, dynamic_array *target_array);
 
