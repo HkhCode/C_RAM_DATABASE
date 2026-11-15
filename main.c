@@ -4,11 +4,7 @@
 #include "hash.h"
 
 int main() {
-    char *test1 = "hosein";
-    char *test2 = "hkhcode";
-    int index1 = make_index(test1, 6, 10);
-    int index2 = make_index(test2, 7, 10);
-    printf("index1 is %d \n", index1);
-    printf("index2 is %d \n", index2);
+    user users[] = {{1, 10, 2, 4, 4, "wd", "qwer", "1234"}, {2, 12, 2, 4, 4, "we", "qwer", "1234"}};
+    init_dynamic_array(10, users, 2);
     return 0;
 }

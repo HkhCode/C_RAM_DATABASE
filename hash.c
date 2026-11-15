@@ -25,6 +25,3 @@ int hash(char *s, int s_size) {
 int make_index(char *s, int s_size, int array_size) {
     return (hash(s, s_size) & 0x7FFFFFFF) % array_size;
 }
-/*int find_index(char *username, int arraySize) {
-
-}*/

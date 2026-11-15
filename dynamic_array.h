@@ -1,15 +1,26 @@
 #ifndef DYNAMIC_ARRAY_H
 #define DYNAMIC_ARRAY_H
+#include <stdbool.h>
 #include "user.h"
 
 #define ADD_ON_REALOC 5
+
+struct chain_node { 
+    bool filled;
+    user *value;
+    struct chain_node *next;
+};
+
+typedef struct chain_node linked_list_node;
 
 typedef struct {
     int size;
     int free;
     int alocated;
-    user *users;
+    linked_list_node *list;
 } dynamic_array;
+
+
 
 dynamic_array *init_dynamic_array(int size, user *items, int items_count);
 
