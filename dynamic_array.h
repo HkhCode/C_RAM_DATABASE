@@ -24,14 +24,16 @@ typedef struct {
 
 dynamic_array *init_dynamic_array(int size, user *items, int items_count);
 
-void *insert_item(user *user, dynamic_array *target_array);
+void *insert_item(user user, dynamic_array *target_array);
 
-dynamic_array *delete_item(int userid, dynamic_array *target_array);
+void delete_item(user *target_user, dynamic_array *target_array);
 
 dynamic_array *update_item(int userid, user *new_user, dynamic_array *target_array);
 
 void print_dynamic_array_items(dynamic_array *target_array);
 
 void remove_dynamic_array(dynamic_array *target_array);
+
+void resize_dynamic_array(dynamic_array *target_array, int new_size);
 
 #endif

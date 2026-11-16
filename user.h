@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    uint id;
+    int id;
     int age;
     int name_length;
     int email_length;
