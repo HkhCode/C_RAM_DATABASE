@@ -36,6 +36,7 @@ dynamic_array *init_dynamic_array(int size, user *items, int items_count)
         if (!dyn_array->list[item_index].filled) {
             dyn_array->list[item_index] = *new_node;
             alocated_slots++;
+            //free(new_node);
         } 
         else { 
             //linked_list_node *current = malloc(sizeof(linked_list_node));
@@ -69,8 +70,12 @@ void *insert_item(user new_user, dynamic_array *target_array)
     strcpy(new_user_copy->name, new_user.name);
     linked_list_node new_node = {true, new_user_copy, NULL};
     if (target_array->list[target_index].filled) {
-        linked_list_node current = target_array->list[target_index];
-        new_node.next = &current;
+        //linked_list_node current = target_array->list[target_index];
+        linked_list_node *old_head = malloc(sizeof(linked_list_node));
+        old_head->filled = true;
+        old_head->next = target_array->list[target_index].next;
+        old_head->value = target_array->list[target_index].value;
+        new_node.next = old_head;
         target_array->list[target_index] = new_node;
     }
     else { 
@@ -88,15 +93,14 @@ void delete_item(user *target_user, dynamic_array *target_array) {
         if (head->value->id == target_user->id) {
             if (head->next != NULL)  {
                 linked_list_node *new_head = head->next;
-                printf("In If %p \n", new_head);
                 target_array->list[target_index] = *new_head;
             }
             else {
-                linked_list_node *empty_head = malloc(sizeof(linked_list_node));
-                empty_head->filled = false;
-                empty_head->next = NULL;
-                empty_head->value = calloc(1, sizeof(user));
-                target_array->list[target_index] = *empty_head;
+                linked_list_node empty_head;
+                empty_head.filled = false;
+                empty_head.next = NULL;
+                empty_head.value = calloc(1, sizeof(user));
+                target_array->list[target_index] = empty_head;
             }
             printf("item with id: %d deleted succesfully \n", target_user->id);
         }
@@ -108,19 +112,66 @@ void delete_item(user *target_user, dynamic_array *target_array) {
             }
 
             if (current->next != NULL) {
-                printf("in if 1 \n");
                 linked_list_node *delete_node = current->next;
                 current->next = delete_node->next;
                 free(current);
                 printf("item with id: %d deleted succesfully \n", target_user->id);           
             }
-        
-
-        }
-        
+        }     
     }
     else { 
         printf("item not found, wrong id or index! \n");
     }
     
+}
+
+void *update_item(user *target_user, user *new_user, dynamic_array *target_array) {
+    delete_item(target_user, target_array);
+    insert_item(*new_user, target_array);
+}
+
+void remove_dynamic_array(dynamic_array *target_array) {
+    free(target_array);
+}
+
+dynamic_array *resize_dynamic_array(dynamic_array *target_array, int new_size) {
+    if (new_size < target_array->alocated) {
+        printf("Shriking array is not possible, alocated item's count is more than new size! \n");
+        return;
+    }
+    target_array->size = new_size;
+    linked_list_node *new_list = realloc(target_array->list, sizeof(linked_list_node) * new_size);
+    if (new_list == NULL) {
+        printf("Resize failed! not enough memory. \n");
+        return;
+    }
+    target_array->list = new_list;
+    return target_array;
+}
+
+void print_dynamic_array_items(dynamic_array *target_array) {
+    for (int i = 0; i < target_array->size; i++) {
+        if (target_array->list[i].filled) {
+            printf("at index %d: \n", i);
+            printf("user id :%d \n", target_array->list[i].value->id);
+            printf("user name :%s \n", target_array->list[i].value->name);
+            linked_list_node *current = target_array->list[i].next;
+            while (current != NULL) {
+                printf("next node: \n");
+                if (current->value != NULL) {
+                    printf("\t user id : %d\n", current->value->id);
+                    printf("\t user name : %s\n", current->value->name);
+                }
+                if (current->next == NULL) {
+                    break; // just added for more care XD
+                }
+                current = current->next;
+            }
+            printf("\n");
+        }
+        else {
+            printf("empty index %d\n", i);
+        }
+
+    }
 }

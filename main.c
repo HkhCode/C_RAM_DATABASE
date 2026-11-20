@@ -8,8 +8,9 @@ int main() {
     dynamic_array *array_addr = init_dynamic_array(10, users, 2);
     user inserting_user = {1, 10, 3, 5, 5, "wd1", "qwer1", "12341"};
     insert_item(inserting_user, array_addr);
-    printf("user inserted succesfully \n");
+    //printf("user inserted succesfully \n");
     //printf("arr pointer: %p", array_addr);
-    delete_item(users, array_addr);
+    //delete_item(users, array_addr);
+    print_dynamic_array_items(array_addr);
     return 0;
 }
