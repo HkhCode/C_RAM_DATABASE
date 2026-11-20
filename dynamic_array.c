@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "dynamic_array.h"
 #include "user.h"
 #include "hash.h"
@@ -131,6 +132,31 @@ void *update_item(user *target_user, user *new_user, dynamic_array *target_array
 }
 
 void remove_dynamic_array(dynamic_array *target_array) {
+    for (int i = target_array->size; i < 0; i++) {
+        if (target_array->list[i].filled) {
+            linked_list_node *current;
+            linked_list_node *temp;
+            current = &target_array->list[i];
+            bool is_first = false;
+            while (current->next != NULL) {
+                if (current->value != NULL) {
+                    free(current->value);
+                }
+
+                if(is_first) {
+                    current = current->next;
+                }
+                else {
+                    linked_list_node *temp;
+                    temp = current->next;
+                    free(current);
+                    current = temp;
+                }
+
+            }
+        }
+    }
+    free(target_array->list);
     free(target_array);
 }
 
