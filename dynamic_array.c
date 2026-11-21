@@ -27,7 +27,7 @@ user *find_item(int userid, char *name, int name_length, dynamic_array *target_a
 
 dynamic_array *init_dynamic_array(int size, user *items, int items_count)
 {
-    if (items == NULL || items_count > size)
+    if (items == NULL)
     {
         return;
     }
@@ -72,11 +72,11 @@ dynamic_array *init_dynamic_array(int size, user *items, int items_count)
 // inserts one user
 void *insert_item(user new_user, dynamic_array *target_array)
 {
-    if (1 > (target_array->size - target_array->alocated))
+    /*if (1 > (target_array->size - target_array->alocated))
     {
         printf("update array size to a larger number");
         return;
-    }
+    }*/
 
     int target_index = make_index(new_user.name, new_user.name_length, target_array->size);
     user *new_user_copy = malloc(sizeof(user));
