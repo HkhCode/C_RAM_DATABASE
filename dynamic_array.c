@@ -6,6 +6,25 @@
 #include "user.h"
 #include "hash.h"
 
+user *find_item(int userid, char *name, int name_length, dynamic_array *target_array) {
+    int item_index = make_index(name, name_length, target_array->size);
+    if (target_array->list[item_index].value != NULL) {
+        if (target_array->list[item_index].value->id == userid) {
+            return target_array->list[item_index].value;
+        }
+        else {
+            linked_list_node *current = &target_array->list[item_index];
+            while (current->next != NULL && current->value->id != userid) {
+                current = current->next;
+            }
+            if (current != NULL) {
+                return current->value;
+            }
+        }
+    }
+    return;   
+}
+
 dynamic_array *init_dynamic_array(int size, user *items, int items_count)
 {
     if (items == NULL || items_count > size)

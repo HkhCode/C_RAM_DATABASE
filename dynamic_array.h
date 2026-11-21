@@ -20,7 +20,7 @@ typedef struct {
     linked_list_node *list;
 } dynamic_array;
 
-
+user *find_item(int userid, char *name, int name_length, dynamic_array *target_array);
 
 dynamic_array *init_dynamic_array(int size, user *items, int items_count);
 
