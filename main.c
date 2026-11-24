@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
     for (int i = 1; i < sizeof(test_users) / sizeof(test_users[0]); i++) {
         insert_item(test_users[i], test_array);
     }
+    
 
     delete_item(&test_users[3], test_array);
     delete_item(&test_users[12], test_array);
@@ -47,5 +48,7 @@ int main(int argc, char *argv[]) {
 
 
     update_item(&test_users[16], new_test_users_16, test_array);
+    free(new_test_users_16);
+    remove_dynamic_array(test_array);
     return 0;
 }

@@ -53,16 +53,22 @@ dynamic_array *init_dynamic_array(int size, user *items, int items_count)
         strcpy(cur_user->password, items[i].password);
         strcpy(cur_user->name, items[i].name);
         new_node->value = cur_user;
+        //free(cur_user);
         if (!dyn_array->list[item_index].filled) {
             dyn_array->list[item_index] = *new_node;
             alocated_slots++;
-            //free(new_node);
+            free(new_node);
         } 
         else { 
-            //linked_list_node *current = malloc(sizeof(linked_list_node));
-            //current = 
-            new_node->next = &dyn_array->list[item_index];
-            dyn_array->list[item_index].next = &new_node;
+            linked_list_node *old_head = malloc(sizeof(linked_list_node));
+
+            old_head->filled = dyn_array->list[item_index].filled;
+            old_head->next = dyn_array->list[item_index].next;
+            old_head->value = dyn_array->list[item_index].value;
+
+            new_node->next = old_head;
+            dyn_array->list[item_index] = *new_node;
+            free(new_node);
         }
     }
     dyn_array->alocated = alocated_slots;
@@ -72,12 +78,8 @@ dynamic_array *init_dynamic_array(int size, user *items, int items_count)
 // inserts one user
 void *insert_item(user new_user, dynamic_array *target_array)
 {
-    /*if (1 > (target_array->size - target_array->alocated))
-    {
-        printf("update array size to a larger number");
-        return;
-    }*/
-
+    printf("Called insert \n");
+    printf("==================================================== \n");
     int target_index = make_index(new_user.name, new_user.name_length, target_array->size);
     user *new_user_copy = malloc(sizeof(user));
     new_user_copy->id = new_user.id;
@@ -90,7 +92,7 @@ void *insert_item(user new_user, dynamic_array *target_array)
     strcpy(new_user_copy->name, new_user.name);
     linked_list_node new_node = {true, new_user_copy, NULL};
     if (target_array->list[target_index].filled) {
-        //linked_list_node current = target_array->list[target_index];
+        printf("inserting index : %d\n", target_index);
         linked_list_node *old_head = malloc(sizeof(linked_list_node));
         old_head->filled = true;
         old_head->next = target_array->list[target_index].next;
@@ -99,8 +101,9 @@ void *insert_item(user new_user, dynamic_array *target_array)
         target_array->list[target_index] = new_node;
     }
     else { 
+        printf("inserting index at else block : %d\n", target_index);
         target_array->list[target_index] = new_node;
-        target_array->alocated++;
+        target_array->alocated = target_array->alocated + 1;
     }
     return target_array;
 
@@ -112,29 +115,45 @@ void delete_item(user *target_user, dynamic_array *target_array) {
         linked_list_node *head = &target_array->list[target_index];
         if (head->value->id == target_user->id) {
             if (head->next != NULL)  {
-                linked_list_node *new_head = head->next;
-                target_array->list[target_index] = *new_head;
+                linked_list_node *node_to_delete = head->next;
+                free(head->value);
+                head->value = node_to_delete->value;
+                head->next = node_to_delete->next;
+                free(node_to_delete); 
             }
             else {
                 linked_list_node empty_head;
                 empty_head.filled = false;
                 empty_head.next = NULL;
-                empty_head.value = calloc(1, sizeof(user));
+                //empty_head.value = calloc(1, sizeof(user));
                 target_array->list[target_index] = empty_head;
             }
             printf("item with id: %d deleted succesfully \n", target_user->id);
         }
         else {
             linked_list_node *current = head->next;
-            printf("current id is %d\n", current->next->value->id);
-            while(current->next != NULL && current->next->value->id != target_user->id) {
+            //printf("current id is %d\n", current->next->value->id);
+            while(current != NULL) {
+                if (current->next != NULL) {
+                    if (current->next->value->id == target_user->id)
+                        break;
+                }
                 current = current->next;
             }
 
-            if (current->next != NULL) {
-                linked_list_node *delete_node = current->next;
-                current->next = delete_node->next;
-                free(current);
+            if (current != NULL) {
+                if (current->next != NULL) {
+                    linked_list_node *delete_node = current->next;
+                    if (delete_node->next != NULL) {
+                        current->next = delete_node->next;
+                    }
+                    else {
+                        current->next = NULL;
+                    }
+                    free(delete_node->value);
+                    free(delete_node);
+                }
+
                 printf("item with id: %d deleted succesfully \n", target_user->id);           
             }
         }     
@@ -151,27 +170,22 @@ void *update_item(user *target_user, user *new_user, dynamic_array *target_array
 }
 
 void remove_dynamic_array(dynamic_array *target_array) {
-    for (int i = target_array->size; i < 0; i++) {
+    for (int i = 0; i < target_array->size; i++) {
         if (target_array->list[i].filled) {
             linked_list_node *current;
-            linked_list_node *temp;
             current = &target_array->list[i];
-            bool is_first = false;
-            while (current->next != NULL) {
+            bool is_first = true;
+            while (current != NULL) {
                 if (current->value != NULL) {
                     free(current->value);
                 }
 
-                if(is_first) {
-                    current = current->next;
-                }
-                else {
-                    linked_list_node *temp;
-                    temp = current->next;
-                    free(current);
-                    current = temp;
+                linked_list_node *next_node = current->next;
+                if (current != &target_array->list[i]) {
+                    free(current); 
                 }
 
+                current = next_node;
             }
         }
     }
